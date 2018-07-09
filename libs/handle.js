@@ -3,9 +3,12 @@ const path = require("path");
 
 module.exports.handleFile = function() {
   var XLSX = require("xlsx");
-  var workbook = XLSX.readFile("./public/upload/file.xlsx", {
-    cellDates: true
-  });
+  var workbook = XLSX.readFile(
+    path.join(__dirname, "../public/upload/file.xlsx"),
+    {
+      cellDates: true
+    }
+  );
   const worksheet = workbook.Sheets[workbook.SheetNames[0]];
   const data = XLSX.utils.sheet_to_json(worksheet);
   const filename = Date.now();
@@ -36,7 +39,11 @@ module.exports.handleFile = function() {
         timeout +
         "\t" +
         "2 \t 0 \r\n";
-      fs.appendFileSync(`./public/chamcong/${filename}.txt`, str, "utf8");
+      fs.appendFileSync(
+        path.join(__dirname, `../public/chamcong/${filename}.txt`),
+        str,
+        "utf8"
+      );
     }
   }
 };
