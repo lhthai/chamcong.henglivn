@@ -40,7 +40,7 @@ module.exports.handleFile = function() {
         "\t" +
         "2 \t 0 \r\n";
       fs.appendFileSync(
-        `C:/chamcong/${filename}.txt`,
+        path.join(__dirname, `../public/chamcong/${filename}.txt`),
         str,
         "utf8"
       );

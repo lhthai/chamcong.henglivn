@@ -52,6 +52,7 @@ app.get("/", (req, res) => {
 app.post("/upload", (req, res) => {
   upload(req, res, err => {
     if (err) {
+      res.download('1531185931185.txt')
       res.redirect('/');
     } else {
       handle.handleFile();
