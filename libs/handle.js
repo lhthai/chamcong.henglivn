@@ -11,7 +11,13 @@ module.exports.handleFile = function() {
   );
   const worksheet = workbook.Sheets[workbook.SheetNames[0]];
   const data = XLSX.utils.sheet_to_json(worksheet);
-  const filename = Date.now();
+  const getdate = new Date();
+  const filename =
+    getdate.toISOString().slice(0, 10) +
+    "-" +
+    getdate.getHours() +
+    "" +
+    getdate.getMinutes();
   for (i = 4; i <= data.length + 3; i++) {
     if (
       worksheet["A" + i] != undefined &&
