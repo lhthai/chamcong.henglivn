@@ -5,6 +5,7 @@ html, body{
 }
 .jumbotron{
     margin: 150px auto;
+    padding: 20px;
 }
 #btn-xuly{
     width: 100px;
