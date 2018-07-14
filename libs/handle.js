@@ -25,48 +25,47 @@ module.exports.handleFile = function() {
       worksheet["G" + i] != undefined &&
       worksheet["H" + i] != undefined
     ) {
-      let id = worksheet["A" + i].v;
-      let timein = worksheet["G" + i].v;
-      let timeout = worksheet["H" + i].v;
-      let date = chageDateIfNightShift(worksheet["E" + i].v, timein, timeout);
+      let worker_id = worksheet["A" + i].v;
+      let timeIn = worksheet["G" + i].v;
+      let timeOut = worksheet["H" + i].v;
+      let workdate = worksheet["E" + i].v;
 
-      let str =
-        id +
-        "\t" +
-        date +
-        " " +
-        timein +
-        "\t" +
-        "2 \t 0 \r\n" +
-        id +
-        "\t" +
-        date +
-        " " +
-        timeout +
-        "\t" +
-        "2 \t 0 \r\n";
+      // Check night shift
+      let strOutput;
+      if(checkIfNightShift(timeIn, timeOut)){
+        strOutput = `${worker_id}\t${addDays(workdate, 2)} ${timeIn}\t2\t0\r\n${worker_id}\t${addDays(workdate, 3)} ${timeOut}\t2\t0\r\n`;
+      }else{
+        strOutput = `${worker_id}\t${addDays(workdate, 1)} ${timeIn}\t2\t0\r\n${worker_id}\t${addDays(workdate, 1)} ${timeOut}\t2\t0\r\n`;
+      }
+      
       fs.appendFileSync(
         path.join(__dirname, `../public/chamcong/${filename}.txt`),
-        str,
+        strOutput,
         "utf8"
       );
     }
   }
 };
 
-function chageDateIfNightShift(date, timein, timeout) {
-  let d = new Date(date);
-  let newDate = new Date(d);
-  const hourIn = parseInt(timein.slice(0, 2));
-  const hourOut = parseInt(timeout.slice(0, 2));
+// Checking worker works day or night shift
+function checkIfNightShift(timeIn, timeOut) {
+  const hourIn = parseInt(timeIn.slice(0, 2));
+  const hourOut = parseInt(timeOut.slice(0, 2));
 
   if (hourIn > hourOut && hourIn >= 19) {
-    //return true if the time is more than 19:00:00
-    newDate.setDate(d.getDate() + 2);
-    return newDate.toISOString().slice(0, 10);
+    //return true if the time is more than 19:00
+    return true;
   } else {
-    //return false if the time is less than 19:00:00
-    newDate.setDate(d.getDate() + 1);
-    return newDate.toISOString().slice(0, 10);
+    //return false if the time is less than 19:00
+    return false;
   }
+}
+
+// Add days to the date you want
+function addDays(date, numberOfDays) {
+  let d = new Date(date);
+  let newDate = new Date(d);
+  newDate.setDate(d.getDate() + numberOfDays);
+
+  return newDate.toISOString().slice(0, 10);
 }
