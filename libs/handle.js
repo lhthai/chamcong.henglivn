@@ -28,7 +28,11 @@ module.exports.handleFile = function() {
       let worker_id = worksheet["A" + i].v;
       let timeIn = worksheet["G" + i].v;
 
-      if (worker_id === "18040223" && timeIn.slice(0, 2) >= 8) {
+      if (
+        worker_id === "18040223" &&
+        timeIn.slice(0, 2) == 8 &&
+        timeIn.slice(3) < 15
+      ) {
         timeIn = "07:57";
       }
 
