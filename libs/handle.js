@@ -27,17 +27,34 @@ module.exports.handleFile = function() {
     ) {
       let worker_id = worksheet["A" + i].v;
       let timeIn = worksheet["G" + i].v;
+
+      if (worker_id === "18040223" && timeIn.slice(0, 2) >= 8) {
+        timeIn = "07:57";
+      }
+
       let timeOut = worksheet["H" + i].v;
       let workdate = worksheet["E" + i].v;
 
       // Check night shift
       let strOutput;
-      if(checkIfNightShift(timeIn, timeOut)){
-        strOutput = `${worker_id}\t${addDays(workdate, 2)} ${timeIn}\t2\t0\r\n${worker_id}\t${addDays(workdate, 3)} ${timeOut}\t2\t0\r\n`;
-      }else{
-        strOutput = `${worker_id}\t${addDays(workdate, 1)} ${timeIn}\t2\t0\r\n${worker_id}\t${addDays(workdate, 1)} ${timeOut}\t2\t0\r\n`;
+      if (checkIfNightShift(timeIn, timeOut)) {
+        strOutput = `${worker_id}\t${addDays(
+          workdate,
+          2
+        )} ${timeIn}\t2\t0\r\n${worker_id}\t${addDays(
+          workdate,
+          3
+        )} ${timeOut}\t2\t0\r\n`;
+      } else {
+        strOutput = `${worker_id}\t${addDays(
+          workdate,
+          1
+        )} ${timeIn}\t2\t0\r\n${worker_id}\t${addDays(
+          workdate,
+          1
+        )} ${timeOut}\t2\t0\r\n`;
       }
-      
+
       fs.appendFileSync(
         path.join(__dirname, `../public/chamcong/${filename}.txt`),
         strOutput,
