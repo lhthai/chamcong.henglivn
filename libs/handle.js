@@ -27,15 +27,6 @@ module.exports.handleFileAddDate = function() {
     ) {
       let worker_id = worksheet["A" + i].v;
       let timeIn = worksheet["G" + i].v;
-
-      if (
-        worker_id === "18040223" &&
-        timeIn.slice(0, 2) == 8 &&
-        timeIn.slice(3) < 15
-      ) {
-        timeIn = "07:57";
-      }
-
       let timeOut = worksheet["H" + i].v;
       let workdate = worksheet["E" + i].v;
 
@@ -95,15 +86,6 @@ module.exports.handleFileKeepDate = function() {
     ) {
       let worker_id = worksheet["A" + i].v;
       let timeIn = worksheet["G" + i].v;
-
-      if (
-        worker_id === "18040223" &&
-        timeIn.slice(0, 2) == 8 &&
-        timeIn.slice(3) < 15
-      ) {
-        timeIn = "07:57";
-      }
-
       let timeOut = worksheet["H" + i].v;
       let workdate = worksheet["E" + i].v;
 
