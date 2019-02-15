@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-module.exports.handleFile = function() {
+module.exports.handleFileAddDate = function() {
   var XLSX = require("xlsx");
   var workbook = XLSX.readFile(
     path.join(__dirname, "../public/upload/file.xlsx"),
@@ -48,6 +48,74 @@ module.exports.handleFile = function() {
         )} ${timeIn}\t2\t0\r\n${worker_id}\t${addDays(
           workdate,
           3
+        )} ${timeOut}\t2\t0\r\n`;
+      } else {
+        strOutput = `${worker_id}\t${addDays(
+          workdate,
+          1
+        )} ${timeIn}\t2\t0\r\n${worker_id}\t${addDays(
+          workdate,
+          1
+        )} ${timeOut}\t2\t0\r\n`;
+      }
+
+      fs.appendFileSync(
+        path.join(__dirname, `../public/chamcong/${filename}.txt`),
+        strOutput,
+        "utf8"
+      );
+    }
+  }
+};
+
+
+module.exports.handleFileKeepDate = function() {
+  var XLSX = require("xlsx");
+  var workbook = XLSX.readFile(
+    path.join(__dirname, "../public/upload/file.xlsx"),
+    {
+      cellDates: true
+    }
+  );
+  const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+  const data = XLSX.utils.sheet_to_json(worksheet);
+  const getdate = new Date();
+  const filename =
+    getdate.toISOString().slice(0, 10) +
+    "-" +
+    getdate.getHours() +
+    "" +
+    getdate.getMinutes();
+  for (i = 4; i <= data.length + 3; i++) {
+    if (
+      worksheet["A" + i] != undefined &&
+      worksheet["E" + i] != undefined &&
+      worksheet["G" + i] != undefined &&
+      worksheet["H" + i] != undefined
+    ) {
+      let worker_id = worksheet["A" + i].v;
+      let timeIn = worksheet["G" + i].v;
+
+      if (
+        worker_id === "18040223" &&
+        timeIn.slice(0, 2) == 8 &&
+        timeIn.slice(3) < 15
+      ) {
+        timeIn = "07:57";
+      }
+
+      let timeOut = worksheet["H" + i].v;
+      let workdate = worksheet["E" + i].v;
+
+      // Check night shift
+      let strOutput;
+      if (checkIfNightShift(timeIn, timeOut)) {
+        strOutput = `${worker_id}\t${addDays(
+          workdate,
+          1
+        )} ${timeIn}\t2\t0\r\n${worker_id}\t${addDays(
+          workdate,
+          2
         )} ${timeOut}\t2\t0\r\n`;
       } else {
         strOutput = `${worker_id}\t${addDays(

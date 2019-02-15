@@ -55,7 +55,19 @@ app.post("/upload", (req, res) => {
       res.download('1531185931185.txt')
       res.redirect('/');
     } else {
-      handle.handleFile();
+      handle.handleFileAddDate();
+      res.redirect('/');
+    }
+  });
+});
+
+app.post("/keepdate", (req, res) => {
+  upload(req, res, err => {
+    if (err) {
+      res.download('1531185931185.txt')
+      res.redirect('/');
+    } else {
+      handle.handleFileKeepDate();
       res.redirect('/');
     }
   });
